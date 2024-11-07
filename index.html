@@ -42,7 +42,7 @@
             color: #333;
         }
 
-        input{
+        input {
             width: 100%;
             padding: 10px;
             margin: 5px 0 15px;
@@ -137,7 +137,7 @@
             updatePlot(scanAngle, distance, power);
         });
     }
-    
+
     function updatePlot(angle, distance, power) {
         const normalizedPower = Math.max(0, Math.min(power * 100, 100));
 
@@ -165,6 +165,27 @@
             .then(response => alert('Parameters successfully changed!'))
             .catch(error => console.error('Error', error));
     }
+
+    function updateRadarConfig(measurementsPerRotation, rotationSpeed, targetSpeed) {
+        axios.put('http://localhost:4000/config', {
+            measurementsPerRotation: measurementsPerRotation,
+            rotationSpeed: rotationSpeed,
+            targetSpeed: targetSpeed
+        })
+            .then(response => {
+                console.log('Configuration updated:', response.data);
+            })
+            .catch(error => {
+                console.error('Error updating configuration:', error);
+            });
+    }
+
+    socket.onmessage = (event) => {
+        console.log('Received data:', event.data);
+        const radarData = JSON.parse(event.data);
+        processRadarData(radarData);
+    };
+
 </script>
 </body>
 </html>
